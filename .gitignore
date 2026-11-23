@@ -1,0 +1,97 @@
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### Maven ###
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.flattened-pom.xml
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+### Java 编译/打包产物 ###
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+### 日志 ###
+logs/
+*.log
+*.log.gz
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Eclipse ###
+.apt_generated_tests
+bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Gradle ###
+.gradle/
+
+### Node（前端预留） ###
+node_modules/
+
+### 本地敏感配置，勿提交 ###
+application-local.yaml
+application-local.yml
+application-dev.yaml
+application-prod.yaml
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.jks
+
+### 操作系统 ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+### 编辑器临时文件 ###
+*.swp
+*.swo
+*.bak
+*.tmp
+*~
