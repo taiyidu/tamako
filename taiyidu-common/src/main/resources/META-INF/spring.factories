@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.taiyidu.taiyiducommon.config.RedisAutoConfiguration
