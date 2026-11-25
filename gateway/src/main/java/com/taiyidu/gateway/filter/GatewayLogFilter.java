@@ -28,6 +28,7 @@ public class GatewayLogFilter implements GlobalFilter, Ordered {
 //        } else {
 //            log.warn("【网关请求】Authorization Header 缺失！");
 //        }
+
         // 继续执行过滤器链，放行请求
         return chain.filter(exchange);
     }
