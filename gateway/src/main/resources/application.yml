@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: taiyidu-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      # ★ 转发超时：下游挂了/慢了不至于把网关拖死
+      httpclient:
+        connect-timeout: 3000
+        response-timeout: 5s
+      routes:
+        # 原有：按完整路径转发（兼容你现在的调用方式）
+        - id: taiyidu-library
+          uri: lb://taiyidu-library
+          predicates:
+            - Path=/tamako/taiyidulibrary/**

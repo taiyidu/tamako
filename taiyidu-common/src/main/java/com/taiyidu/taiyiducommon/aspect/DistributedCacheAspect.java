@@ -51,7 +51,7 @@ public class DistributedCacheAspect {
                     return cached;
                 }
 
-                // ⭐ 整个业务执行 + 写缓存 用 try-catch 包起来
+                // 整个业务执行 + 写缓存 用 try-catch 包起来
                 try {
                     Object result = pjp.proceed();
 
@@ -67,7 +67,7 @@ public class DistributedCacheAspect {
 
                     return result;
                 } catch (Throwable ex) {
-                    // ⭐ 异常兜底：写错误占位缓存
+                    //  异常兜底：写错误占位缓存
                     redisTemplate.opsForValue().set(cacheKey, Collections.emptyList(), 1, TimeUnit.MINUTES);
                     log.error("缓存方法执行异常，cacheKey={}, lockKey={}", cacheKey, lockKey, ex);
                     throw ex; // 继续向上抛，让全局异常处理器处理

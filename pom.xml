@@ -12,7 +12,9 @@
     <description>tamako parent</description>
 
     <modules>
+        <module>taiyidu-common</module>
         <module>taiyidu-library</module>
+        <module>gateway</module>
     </modules>
 
     <properties>
@@ -20,8 +22,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.6.13</spring-boot.version>
+        <spring-cloud.version>2021.0.3</spring-cloud.version>                    <!-- ★ -->
+        <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>  <!-- ★ -->
         <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
-        <hutool.version>5.8.11</hutool.version>
+        <hutool.version>5.8.25</hutool.version>   <!-- ★ 原来是5.8.11，但common实际在用5.8.25，对齐到高的 -->
     </properties>
 
     <dependencyManagement>
@@ -34,14 +38,35 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- ★ Spring Cloud BOM：管 gateway、loadbalancer -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- ★ Spring Cloud Alibaba BOM：管 nacos -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- ★ 自家模块也统一管理，library 引 common 时就不用写版本 -->
+            <dependency>
+                <groupId>com.taiyidu</groupId>
+                <artifactId>taiyidu-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-            <!-- MyBatis-Plus：Spring Boot 2.x 用这个 starter -->
+            <!-- MyBatis-Plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
-
             <!--hutool工具包-->
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -68,6 +93,12 @@
                         <target>${java.version}</target>
                         <encoding>UTF-8</encoding>
                     </configuration>
+                </plugin>
+                <!-- ★ common 在用的源码插件，版本也收上来 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>

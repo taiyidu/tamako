@@ -47,6 +47,8 @@ public class DocInfoServiceImpl implements DocInfoService{
         LambdaQueryWrapper<DocInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.orderByDesc(DocInfo::getCreateTime);
         queryWrapper.last("LIMIT 40");
+        queryWrapper.eq(DocInfo::getAuditStatus, 1);
+        queryWrapper.eq(DocInfo::getIsDeleted, 0);
         List<DocInfo> docInfos = docInfoMapper.selectList(queryWrapper);
         //转换 DTO 并返回
         return docInfos.stream().map(doc -> {
@@ -72,6 +74,8 @@ public class DocInfoServiceImpl implements DocInfoService{
         LambdaQueryWrapper<DocInfo> docInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
         docInfoLambdaQueryWrapper.orderByDesc(DocInfo::getViewCount); // 假设你的表里有 view_count 字段
         docInfoLambdaQueryWrapper.last("LIMIT 40");
+        docInfoLambdaQueryWrapper.eq(DocInfo::getAuditStatus, 1);
+        docInfoLambdaQueryWrapper.eq(DocInfo::getIsDeleted, 0);
         List<DocInfo> docInfos = docInfoMapper.selectList(docInfoLambdaQueryWrapper);
         return docInfos.stream().map(doc -> {
             DocPageInfoDto dto = new DocPageInfoDto();

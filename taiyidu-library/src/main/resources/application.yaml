@@ -9,6 +9,12 @@ spring:
     port: 6379
     password: 123456
     database: 0
+  application:
+    name: taiyidu-library
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
 
 
 mybatis-plus:
@@ -42,8 +48,11 @@ logging:
       total-size-cap: 2GB
 
 server:
-  port: 8080
+  port: 18080
   servlet:
     context-path: /tamako/taiyidulibrary          # 统一接口前缀（可选）
   tomcat:
     uri-encoding: UTF-8         # 中文参数编码（可选）
+jwt:
+  secret: "tamokotaiyidulibraryservices202611"
+  expiration:  3600000 #30min
