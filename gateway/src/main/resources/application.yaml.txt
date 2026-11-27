@@ -7,6 +7,7 @@ spring:
   cloud:
     nacos:
       discovery:
+        namespace: tamako
         server-addr: localhost:8848
     gateway:
       # ★ 转发超时：下游挂了/慢了不至于把网关拖死

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: taiyidu-gateway
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: tamako
+      config:
+        namespace: tamako
+        file-extension: yaml
+        refresh-enabled: true
+        shared-configs:
+          - data-id: logging.yaml
+            refresh: true
+          - data-id: jwtconfig.yaml
+            refresh: true

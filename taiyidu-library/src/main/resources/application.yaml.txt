@@ -14,7 +14,9 @@ spring:
   cloud:
     nacos:
       discovery:
+        namespace: tamako
         server-addr: localhost:8848
+
 
 
 mybatis-plus:

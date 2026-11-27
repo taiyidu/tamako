@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * 本文案金就起到一个log的作用，方便查看请求的请求的转发，但是不能看到咋转发到底是不是成功的
+ */
+
 @Slf4j
 @Component
 public class GatewayLogFilter implements GlobalFilter, Ordered {
