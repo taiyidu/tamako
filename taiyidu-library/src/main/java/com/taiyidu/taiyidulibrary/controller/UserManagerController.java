@@ -23,4 +23,5 @@ public class UserManagerController {
         LoginRespDto loginRespDto = userManagerService.login(loginDTO);
         return Result.success(loginRespDto);
     }
+
 }

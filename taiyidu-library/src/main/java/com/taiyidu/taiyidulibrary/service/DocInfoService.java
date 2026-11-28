@@ -8,4 +8,6 @@ public interface DocInfoService {
     List<DocPageInfoDto> showNewDoc();
 
     List<DocPageInfoDto> showRecommendDoc();
+
+    List<DocPageInfoDto> showFavoriteDoc();
 }

@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.taiyidu.taiyiducommon.config.RedisAutoConfiguration,\
-  com.taiyidu.taiyiducommon.handler.GlobalExceptionHandler
+  com.taiyidu.taiyiducommon.handler.GlobalExceptionHandler,\
+  com.taiyidu.taiyiducommon.config.SecurityConfig

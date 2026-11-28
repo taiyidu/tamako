@@ -19,6 +19,8 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -63,7 +65,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
 //        log.info("请求路径: {}", path);
-        log.info("whitelist:{}", whitelist);
+//        log.info("whitelist:{}", whitelist);
         // 1. 白名单放行判断
         for (String white : whitelist) {
             // 使用 AntPathMatcher 支持 /** 等通配符
@@ -94,11 +96,23 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             Claims claims = jwtUtil.parseToken(token);
 
             // 获取用户 ID (通常签发时放在了 subject 里)
-            String userId = claims.getSubject();
-
+            String userId = claims.get("userId").toString();
+            String role = claims.get("role").toString();
             // 5. 鉴权通过，透传用户信息给下游微服务
             ServerHttpRequest mutated = request.mutate()
-                    .header("X-User-Id", userId == null ? "" : userId)
+                    .headers(httpHeaders -> {
+                        // 【安全关键】先清空外部可能伪造的 Header
+                        httpHeaders.remove("X-User-Id");
+                        httpHeaders.remove("X-User-Role");
+
+                        // 然后再注入网关解析出的真实数据
+                        httpHeaders.set("X-User-Id", userId == null ? "" : userId);
+                        try {
+                            httpHeaders.set("X-User-Role", role == null ? "" : URLEncoder.encode(role, "UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            throw new UnauthorizedException("token权限无效或已被篡改");
+                        }
+                    })
                     .build();
 
             return chain.filter(exchange.mutate().request(mutated).build());

@@ -1,17 +1,25 @@
 package com.taiyidu.taiyidulibrary.service.Impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.taiyidu.taiyiducommon.annotation.DistributedCacheable;
+import com.taiyidu.taiyiducommon.exception.BusinessException;
 import com.taiyidu.taiyidulibrary.domain.dto.DocPageInfoDto;
+import com.taiyidu.taiyidulibrary.domain.po.DocFavorite;
 import com.taiyidu.taiyidulibrary.domain.po.DocInfo;
+import com.taiyidu.taiyidulibrary.mapper.DocFavoriteMapper;
 import com.taiyidu.taiyidulibrary.mapper.DocInfoMapper;
 import com.taiyidu.taiyidulibrary.service.DocInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DocInfoServiceImpl implements DocInfoService{
     private final DocInfoMapper docInfoMapper;
-    private final RedissonClient redissonClient;
-
+    private final DocFavoriteMapper docFavoriteMapper;
     /**
      * 新书榜单展示
      * @return List<DocPageInfoDto> 展示dto的list
@@ -51,11 +58,7 @@ public class DocInfoServiceImpl implements DocInfoService{
         queryWrapper.eq(DocInfo::getIsDeleted, 0);
         List<DocInfo> docInfos = docInfoMapper.selectList(queryWrapper);
         //转换 DTO 并返回
-        return docInfos.stream().map(doc -> {
-            DocPageInfoDto dto = new DocPageInfoDto();
-            BeanUtils.copyProperties(doc, dto);
-            return dto;
-        }).collect(Collectors.toList());
+        return BeanUtil.copyToList(docInfos, DocPageInfoDto.class);
     }
 
     /**
@@ -77,10 +80,25 @@ public class DocInfoServiceImpl implements DocInfoService{
         docInfoLambdaQueryWrapper.eq(DocInfo::getAuditStatus, 1);
         docInfoLambdaQueryWrapper.eq(DocInfo::getIsDeleted, 0);
         List<DocInfo> docInfos = docInfoMapper.selectList(docInfoLambdaQueryWrapper);
-        return docInfos.stream().map(doc -> {
-            DocPageInfoDto dto = new DocPageInfoDto();
-            BeanUtils.copyProperties(doc, dto);
-            return dto;
-        }).collect(Collectors.toList());
+        return BeanUtil.copyToList(docInfos, DocPageInfoDto.class);
+    }
+
+    /**
+     * 展示喜欢的书籍的集合
+     * @return List<DocPageInfoDto> 展示dto的list
+     */
+    @Override
+    public List<DocPageInfoDto> showFavoriteDoc() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            throw new BusinessException("登录消息有误或者位置错误，请向管理员申报");
+        }
+        String userId = (String) auth.getPrincipal(); // 拿网关传的 ID
+        LambdaQueryWrapper<DocFavorite> docFavoriteLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        docFavoriteLambdaQueryWrapper.eq(DocFavorite::getUserId, userId);
+        List<DocFavorite> docFavoritesList = docFavoriteMapper.selectList(docFavoriteLambdaQueryWrapper);
+        List<Long> docIds = docFavoritesList.stream().map(DocFavorite::getDocId).collect(Collectors.toList());
+        List<DocInfo> docInfos = docInfoMapper.selectBatchIds(docIds);
+        return BeanUtil.copyToList(docInfos, DocPageInfoDto.class);
     }
 }
