@@ -34,4 +34,14 @@ public class SysUserDto {
      * 积分余额
      */
     private Integer points;
+
+    /**
+     * QQ号
+     */
+    private String qq;
+
+    /**
+     * QQ邮箱
+     */
+    private String qqEmail;
 }

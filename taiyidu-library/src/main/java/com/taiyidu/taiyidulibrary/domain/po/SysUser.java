@@ -2,16 +2,23 @@ package com.taiyidu.taiyidulibrary.domain.po;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 用户表实体类
+ */
 @Data
 @TableName("sys_user")
-public class SysUser {
+public class SysUser implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户ID
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -51,19 +58,32 @@ public class SysUser {
 
     /**
      * 创建时间
+     * 插入时自动填充
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
      * 更新时间
+     * 插入和更新时自动填充
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     /**
      * 逻辑删除：0-未删除，1-已删除
+     * 配合 MyBatis-Plus 全局配置或 @TableLogic 注解使用
      */
     @TableLogic
     private Integer isDeleted;
+
+    /**
+     * QQ号
+     */
+    private String qq;
+
+    /**
+     * QQ邮箱
+     */
+    private String qqEmail;
 }
